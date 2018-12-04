@@ -1,0 +1,55 @@
+CREATE TABLE categoria(
+    codigo SERIAL PRIMARY KEY ,
+    nombre VARCHAR(50) NOT NULL
+);
+
+insert into categoria (nombre) values ('Elantra');
+insert into categoria (nombre) values ('M');
+insert into categoria (nombre) values ('HHR');
+insert into categoria (nombre) values ('G-Series G20');
+insert into categoria (nombre) values ('Esprit');
+insert into categoria (nombre) values ('850');
+insert into categoria (nombre) values ('CR-V');
+insert into categoria (nombre) values ('NSX');
+insert into categoria (nombre) values ('Suburban 2500');
+insert into categoria (nombre) values ('Envoy XL');
+insert into categoria (nombre) values ('Catera');
+insert into categoria (nombre) values ('A6');
+insert into categoria (nombre) values ('S-Class');
+insert into categoria (nombre) values ('Golf III');
+insert into categoria (nombre) values ('Clubman');
+insert into categoria (nombre) values ('Cooper');
+insert into categoria (nombre) values ('Phantom');
+insert into categoria (nombre) values ('M5');
+insert into categoria (nombre) values ('Skyhawk');
+insert into categoria (nombre) values ('CX-7');
+insert into categoria (nombre) values ('Yukon XL 1500');
+insert into categoria (nombre) values ('Previa');
+insert into categoria (nombre) values ('E-Series');
+insert into categoria (nombre) values ('Spirit');
+insert into categoria (nombre) values ('Eurovan');
+insert into categoria (nombre) values ('XL7');
+insert into categoria (nombre) values ('Avanti');
+insert into categoria (nombre) values ('NSX');
+insert into categoria (nombre) values ('RVR');
+insert into categoria (nombre) values ('Mustang');
+insert into categoria (nombre) values ('Rendezvous');
+insert into categoria (nombre) values ('Ram');
+insert into categoria (nombre) values ('Highlander');
+insert into categoria (nombre) values ('i-MiEV');
+insert into categoria (nombre) values ('Murano');
+insert into categoria (nombre) values ('Aurora');
+insert into categoria (nombre) values ('Pilot');
+insert into categoria (nombre) values ('xB');
+insert into categoria (nombre) values ('Golf');
+insert into categoria (nombre) values ('Firefly');
+insert into categoria (nombre) values ('Leaf');
+insert into categoria (nombre) values ('Wrangler');
+insert into categoria (nombre) values ('Z4');
+insert into categoria (nombre) values ('MDX');
+insert into categoria (nombre) values ('Sephia');
+insert into categoria (nombre) values ('Gran Sport');
+insert into categoria (nombre) values ('Falcon');
+insert into categoria (nombre) values ('S60');
+insert into categoria (nombre) values ('Malibu');
+insert into categoria (nombre) values ('911');
