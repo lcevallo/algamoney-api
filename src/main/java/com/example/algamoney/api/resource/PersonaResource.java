@@ -18,44 +18,46 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.algamoney.api.event.RecursoCreadoEvent;
-import com.example.algamoney.api.model.Categoria;
-import com.example.algamoney.api.repository.CategoriaRepository;
+import com.example.algamoney.api.model.Persona;
+import com.example.algamoney.api.repository.PersonaRepository;
 
 @RestController
-@RequestMapping("/categorias")
-public class CategoriaResource {
+@RequestMapping("/personas")
+public class PersonaResource {
+	
 	
 	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private PersonaRepository personaRepository;
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
-	
 	@GetMapping
-	public List<Categoria> listar(){
-		return categoriaRepository.findAll();
+	public List<Persona> listar(){
+		return personaRepository.findAll();
 	}
-	
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Categoria> crear(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
+	public ResponseEntity<Persona> crear(@Valid @RequestBody Persona persona, HttpServletResponse response) {
 	 
-	Categoria categoriaSalva=categoriaRepository.save(categoria);
+		Persona personaSalva=personaRepository.save(persona);
 	 
-	publisher.publishEvent(new RecursoCreadoEvent(this, response, categoriaSalva.getCodigo()));
+	//Aqui voy a disparar un evento para crear el Location el evento que he creado
+		
+	  publisher.publishEvent(new RecursoCreadoEvent(this, response, personaSalva.getCodigo()));
 	
-	return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
+	   return ResponseEntity.status(HttpStatus.CREATED).body(personaSalva);
 	 
 	}
 	
 	
 	@GetMapping("/{codigo}")
-	public ResponseEntity<Categoria>  buscarPorCodigo(@PathVariable Long codigo) {		
-		Categoria categoria= categoriaRepository.findById(codigo).orElse(null);
-		return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
+	public ResponseEntity<Persona>  buscarPorCodigo(@PathVariable Long codigo) {		
+		Persona persona= personaRepository.findById(codigo).orElse(null);
+		return persona != null ? ResponseEntity.ok(persona) : ResponseEntity.notFound().build();
 	}
+	
 	
 	
 }
