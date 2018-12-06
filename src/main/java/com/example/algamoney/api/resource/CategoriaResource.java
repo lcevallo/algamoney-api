@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class CategoriaResource {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Categoria> crear(@RequestBody Categoria categoria, HttpServletResponse response) {
+	public ResponseEntity<Categoria> crear(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 	 
 	Categoria categoriaSalva=categoriaRepository.save(categoria);
 	 
@@ -50,8 +51,9 @@ public class CategoriaResource {
 	
 	
 	@GetMapping("/{codigo}")
-	public Categoria  buscarPorCodigo(@PathVariable Long codigo) {		
-		return categoriaRepository.findById(codigo).orElse(null);
+	public ResponseEntity<Categoria>  buscarPorCodigo(@PathVariable Long codigo) {		
+		Categoria categoria= categoriaRepository.findById(codigo).orElse(null);
+		return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
 	
 	
