@@ -24,7 +24,7 @@ public class Lanzamiento {
 	
 	private  String descripcion;
 	
-	@Column(name = "data_vencimiento")
+	@Column(name = "data_vencimento")
 	private LocalDate dataVencimiento;
 	
 	
