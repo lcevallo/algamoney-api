@@ -6,7 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name= "persona")
@@ -66,7 +69,12 @@ public class Persona {
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
-
+	
+	@JsonIgnore
+	@Transient
+	public boolean isInactivo() {
+		return !this.activo;
+	}
 
 	@Override
 	public int hashCode() {

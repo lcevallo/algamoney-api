@@ -33,7 +33,7 @@ public class PersonaService {
 	}
 	
 	
-	private Persona buscarPersonaPorCodigo(Long codigo) {
+	public Persona buscarPersonaPorCodigo(Long codigo) {
 		Persona personaSalva = personaRepository.findById(codigo).orElse(null);
 		if(personaSalva == null) {
 			throw new EmptyResultDataAccessException(1);
