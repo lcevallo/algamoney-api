@@ -12,18 +12,21 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.algamoney.api.event.RecursoCreadoEvent;
 import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Error;
 import com.example.algamoney.api.model.Lanzamiento;
 import com.example.algamoney.api.repository.LanzamientoRepository;
+import com.example.algamoney.api.repository.filter.LanzamientoFilter;
 import com.example.algamoney.api.service.LanzamientoService;
 import com.example.algamoney.api.service.exception.PersonaInactivaOInexistenteException;
 
@@ -45,8 +48,8 @@ public class LanzamientoResource {
 	
 	
 	@GetMapping
-	public List<Lanzamiento> listar(){
-		return lanzamientoRepository.findAll();
+	public List<Lanzamiento> buscar(LanzamientoFilter lanzamientoFilter){
+		return lanzamientoRepository.filtrar(lanzamientoFilter);
 	}
 	
 	@GetMapping("/{codigo}")
@@ -62,6 +65,15 @@ public class LanzamientoResource {
 		
 		publisher.publishEvent(new RecursoCreadoEvent(this, response, lanzamientoSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(lanzamientoSalva);
+	}
+	
+	
+	@DeleteMapping("/{codigo}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long codigo)
+	{
+		lanzamientoRepository.deleteById(codigo);
+		
 	}
 	
 	
