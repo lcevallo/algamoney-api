@@ -11,6 +11,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import com.example.algamoney.api.model.Lanzamiento;
@@ -25,7 +28,7 @@ public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 	
 	
 	@Override
-	public List<Lanzamiento> filtrar(LanzamientoFilter lanzamientoFilter){
+	public Page<Lanzamiento> filtrar(LanzamientoFilter lanzamientoFilter, Pageable pageable){
 		
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Lanzamiento> criteria = builder.createQuery(Lanzamiento.class);
@@ -37,7 +40,11 @@ public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 		
 		
 		TypedQuery<Lanzamiento> query = manager.createQuery(criteria);
-		return query.getResultList();
+		
+		adicionarRestricionDePaginacion(query, pageable);
+		
+		
+		return new PageImpl<>(query.getResultList(), pageable, total(lanzamientoFilter)) ;
 		
 	}
 
@@ -70,5 +77,41 @@ public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 		
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
+	
+
+	private void adicionarRestricionDePaginacion(TypedQuery<Lanzamiento> query, Pageable pageable) {
+	   int paginaActual = pageable.getPageNumber();
+	   int totalRegistroPorPagina = pageable.getPageSize();
+	   
+	   int primerRegistroDePagina = paginaActual* totalRegistroPorPagina;
+	   
+	   
+	   query.setFirstResult(primerRegistroDePagina);
+	   
+	   query.setMaxResults(totalRegistroPorPagina);
+	   
+	   
+		
+	}
+	
+	
+	private Long total(LanzamientoFilter lanzamientoFilter) {
+		 
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		
+		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+		
+		Root<Lanzamiento> root = criteria.from(Lanzamiento.class);
+		
+		Predicate[] predicates = crearRestricciones(lanzamientoFilter, builder, root);
+		
+		criteria.where(predicates);
+		
+		criteria.select(builder.count(root));
+		
+		return manager.createQuery(criteria).getSingleResult();
+	 
+	}
+
 
 }
