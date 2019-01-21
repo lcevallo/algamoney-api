@@ -23,7 +23,7 @@ public class LanzamientoService {
 
 	public Lanzamiento salvar(@Valid Lanzamiento lanzamiento) {
 		
-		Persona persona= personaRepository.findById(lanzamiento.getPersona().getCodigo()).orElse(null);
+		Persona persona= personaRepository.findOne(lanzamiento.getPersona().getCodigo());
 		
 		if(persona == null || persona.isInactivo())
 		{

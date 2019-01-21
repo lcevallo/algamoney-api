@@ -56,7 +56,7 @@ public class LanzamientoResource {
 	
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Lanzamiento>  buscarPorCodigo(@PathVariable Long codigo) {		
-		Lanzamiento lanzamiento= lanzamientoRepository.findById(codigo).orElse(null);
+		Lanzamiento lanzamiento= lanzamientoRepository.findOne(codigo);
 		return lanzamiento != null ? ResponseEntity.ok(lanzamiento) : ResponseEntity.notFound().build();
 	}
 	
@@ -74,7 +74,7 @@ public class LanzamientoResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo)
 	{
-		lanzamientoRepository.deleteById(codigo);
+		lanzamientoRepository.delete(codigo);
 		
 	}
 	
