@@ -16,9 +16,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.example.algamoney.api.model.Categoria_;
 import com.example.algamoney.api.model.Lanzamiento;
 import com.example.algamoney.api.model.Lanzamiento_;
+import com.example.algamoney.api.model.Persona_;
 import com.example.algamoney.api.repository.filter.LanzamientoFilter;
+import com.example.algamoney.api.repository.proyeccion.ResumenLanzamiento;
 
 public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 	
@@ -47,7 +50,34 @@ public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 		return new PageImpl<>(query.getResultList(), pageable, total(lanzamientoFilter)) ;
 		
 	}
-
+	
+	@Override
+	public Page<ResumenLanzamiento> resumir(LanzamientoFilter lanzamientoFilter, Pageable pageable) {
+		 
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumenLanzamiento> criteria =builder.createQuery(ResumenLanzamiento.class);
+		Root<Lanzamiento> root = criteria.from(Lanzamiento.class);
+		
+		
+		criteria.select(builder.construct(ResumenLanzamiento.class
+						, root.get(Lanzamiento_.codigo), root.get(Lanzamiento_.descripcion)
+						, root.get(Lanzamiento_.dataVencimiento), root.get(Lanzamiento_.dataPagamento)
+						, root.get(Lanzamiento_.valor), root.get(Lanzamiento_.tipo)
+						, root.get(Lanzamiento_.categoria).get(Categoria_.nombre)
+						, root.get(Lanzamiento_.persona).get(Persona_.nombre)
+						));
+		
+		Predicate[] predicates= crearRestricciones(lanzamientoFilter, builder, root);
+		criteria.where(predicates);
+		
+		
+		TypedQuery<ResumenLanzamiento> query = manager.createQuery(criteria);
+		
+		adicionarRestricionDePaginacion(query, pageable);
+		
+		
+		return new PageImpl<>(query.getResultList(), pageable, total(lanzamientoFilter)) ;
+	}
 
 	private Predicate[] crearRestricciones(LanzamientoFilter lanzamientoFilter, CriteriaBuilder builder,
 			Root<Lanzamiento> root) {
@@ -79,7 +109,8 @@ public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 	}
 	
 
-	private void adicionarRestricionDePaginacion(TypedQuery<Lanzamiento> query, Pageable pageable) {
+	private void adicionarRestricionDePaginacion(TypedQuery<?> query, Pageable pageable) {
+	  
 	   int paginaActual = pageable.getPageNumber();
 	   int totalRegistroPorPagina = pageable.getPageSize();
 	   
@@ -112,6 +143,9 @@ public class LanzamientoRepositoryImpl implements LanzamientoRepositoryQuery {
 		return manager.createQuery(criteria).getSingleResult();
 	 
 	}
+
+
+
 
 
 }

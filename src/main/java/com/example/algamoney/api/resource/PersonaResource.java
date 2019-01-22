@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,7 @@ public class PersonaResource {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public ResponseEntity<Persona> crear(@Valid @RequestBody Persona persona, HttpServletResponse response) {
 	 
 		Persona personaSalva=personaRepository.save(persona);
@@ -59,6 +61,7 @@ public class PersonaResource {
 	
 	
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
 	public ResponseEntity<Persona>  buscarPorCodigo(@PathVariable Long codigo) {		
 		Persona persona= personaRepository.findOne(codigo);
 		return persona != null ? ResponseEntity.ok(persona) : ResponseEntity.notFound().build();
@@ -66,6 +69,7 @@ public class PersonaResource {
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScope('write')")
 	public void remover(@PathVariable Long codigo)
 	{
 		personaRepository.delete(codigo);
@@ -74,6 +78,7 @@ public class PersonaResource {
 	
 	
 	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public ResponseEntity<Persona> actualizar(@PathVariable Long codigo, @Valid @RequestBody Persona persona)
 	{ 
 		Persona personaSalva = personaService.actualizar(codigo, persona);
@@ -82,6 +87,7 @@ public class PersonaResource {
 	
 	@PutMapping("/{codigo}/activo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public void actualizarPropiedadActivo(@PathVariable Long codigo,@RequestBody Boolean activo) {
 		personaService.actualizarPropiedadActivo(codigo,activo);
 		
